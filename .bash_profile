@@ -32,3 +32,8 @@ echo -e "\033];$TABTITLE\007"
 [ -f /etc/profile.d/rvm.sh ] && source /etc/profile.d/rvm.sh
 
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
+export PATH="$HOME/.rbenv/bin:$PATH"
+eval "$(rbenv init -)"
+
+bind "set completion-ignore-case on" # note: bind is used instead of setting these in .inputrc.  This ignores case in bash completion
+bind "set show-all-if-ambiguous On" # this allows you to automatically show completion without double tab-ing
