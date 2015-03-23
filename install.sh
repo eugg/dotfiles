@@ -63,5 +63,6 @@ lnif $dotfilepath/.gitconfig $HOME/.gitconfig
 lnif $dotfilepath/.tmux $HOME/.tmux
 lnif $dotfilepath/.tmux.conf $HOME/.tmux.conf
 lnif $dotfilepath/.osx $HOME/.osx
+lnif $dotfilepath/.git-completion.bash $HOME/.osx
 
 echo "Install Done"

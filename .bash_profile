@@ -37,3 +37,8 @@ eval "$(rbenv init -)"
 
 bind "set completion-ignore-case on" # note: bind is used instead of setting these in .inputrc.  This ignores case in bash completion
 bind "set show-all-if-ambiguous On" # this allows you to automatically show completion without double tab-ing
+
+# git branch Auto completion
+if [ -f ~/.git-completion.bash ]; then
+  . ~/.git-completion.bash
+fi
