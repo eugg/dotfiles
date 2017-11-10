@@ -45,3 +45,5 @@ fi
 # git branch Auto completion
 
 if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
+
+export PATH=~/.composer/vendor/bin:$PATH

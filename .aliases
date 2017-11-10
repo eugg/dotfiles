@@ -24,12 +24,12 @@ case $operatesystem in
     ;;
   "Darwin")
     alias ls="ls -aFG"
-    alias ll='ls -alG --color | less -r'
+    alias ll='ls -alG'
     alias youtube="sudo ipfw add reject src-ip 210.71.222.0/24 in"
     alias cleandns="sudo killall -HUP mDNSResponder"
     alias cleands='sudo find / -name ".DS_Store" -depth -exec rm {} \;'
     alias i5="piconv -f big5 -t utf8 "
-    export PATH="$(brew --prefix josegonzalez/php/php54)/bin:$PATH" # for brew php
+#   export PATH="$(brew --prefix josegonzalez/php/php54)/bin:$PATH" # for brew php
     export PATH="$PATH:$HOME/Library/Python/2.7/bin"
     ;;
   "FreeBSD")
@@ -37,3 +37,15 @@ case $operatesystem in
     alias ll="ls -aGg | less -r"
     ;;
 esac
+
+# for laravel
+alias pa="php artisan"
+alias par="php artisan routes"
+alias pam="php artisan migrate"
+alias pam:r="php artisan migrate:refresh"
+alias pam:roll="php artisan migrate:rollback"
+alias pam:rs="php artisan migrate:refresh --seed"
+alias pda="php artisan dumpautoload"
+alias cu="composer update"
+alias ci="composer install"
+alias cda="composer dump-autoload -o"
