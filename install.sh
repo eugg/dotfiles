@@ -1,68 +1,72 @@
-#!/usr/bin/env sh
+#!/usr/bin/env zsh
 
-warn() {
-    echo "$1" >&2
+set -euo pipefail
+
+dotfiles_dir="$(cd "$(dirname "$0")" && pwd -P)"
+backup_dir="${HOME}/.dotfiles-backup/$(date +%Y%m%d-%H%M%S)"
+dry_run=false
+
+usage() {
+    cat <<EOF
+Usage: ./install.sh [--dry-run]
+
+安裝 zsh-first dotfiles，將設定檔 symlink 到家目錄。
+既有的一般檔案會移到 ${backup_dir}。
+EOF
 }
 
-die() {
-    warn "$1"
-    exit 1
-}
+link_file() {
+    local source="$1"
+    local target="$2"
 
-lnif() {
-    if [ ! -e $2 ] ; then
-        ln -s $1 $2
+    if [ "$dry_run" = true ]; then
+        printf '[dry-run] link %s -> %s\n' "$target" "$source"
+        return
     fi
-    if [ -L $2 ] ; then
-        if [ -d $2 ] ; then
-            rm $2
-        fi
-        ln -sf $1 $2
+
+    mkdir -p "$(dirname "$target")"
+
+    if [ -L "$target" ]; then
+        ln -sfn "$source" "$target"
+        return
     fi
+
+    if [ -e "$target" ]; then
+        mkdir -p "$backup_dir"
+        mv "$target" "$backup_dir/"
+    fi
+
+    ln -s "$source" "$target"
 }
 
-readFileLink() {
-    TARGET_FILE=$1
+while [ $# -gt 0 ]; do
+    case "$1" in
+        --dry-run)
+            dry_run=true
+            ;;
+        -h|--help)
+            usage
+            exit 0
+            ;;
+        *)
+            echo "Unknown option: $1" >&2
+            usage
+            exit 1
+            ;;
+    esac
+    shift
+done
 
-    cd `dirname $TARGET_FILE`
-    TARGET_FILE=`basename $TARGET_FILE`
+echo "Installing zsh dotfiles"
 
-    # Iterate down a (possible) chain of symlinks
-    while [ -L "$TARGET_FILE" ]
-    do
-        TARGET_FILE=`readlink $TARGET_FILE`
-        cd `dirname $TARGET_FILE`
-        TARGET_FILE=`basename $TARGET_FILE`
-    done
+link_file "$dotfiles_dir/.zshrc" "$HOME/.zshrc"
+link_file "$dotfiles_dir/.aliases" "$HOME/.aliases"
+link_file "$dotfiles_dir/.exports" "$HOME/.exports"
+link_file "$dotfiles_dir/.functions" "$HOME/.functions"
+link_file "$dotfiles_dir/.gitconfig" "$HOME/.gitconfig"
+link_file "$dotfiles_dir/.tmux" "$HOME/.tmux"
+link_file "$dotfiles_dir/.tmux.conf" "$HOME/.tmux.conf"
+link_file "$dotfiles_dir/.osx" "$HOME/.osx"
+link_file "$dotfiles_dir/.config/starship.toml" "$HOME/.config/starship.toml"
 
-    # Compute the canonicalized name by finding the physical path 
-    # for the directory we're in and appending the target file.
-    PHYS_DIR=`pwd -P`
-    RESULT=$PHYS_DIR/$TARGET_FILE
-    echo $RESULT
-}
-
-echo 'Installing dotfiles'
-today=`date +%Y%m%d`
-
-for i in $HOME/.bashrc $HOME/.aliases $HOME/.bash_prompt $HOME/.bash_profile $HOME/.functions $HOME/.exports $HOME/.gitconfig $HOME/.zshrc $HOME/.osx $HOME/.screenrc $HOME/.tmux.conf; do [ -e $i ] && [ ! -L $i ] && mv $i $i.$today; done
-
-script="$(readFileLink $0)"
-dotfilepath="$(dirname $script)"
-
-echo 'setting up symlinks'
-lnif $dotfilepath/.bashrc $HOME/.bashrc
-lnif $dotfilepath/.bash_prompt $HOME/.bash_prompt
-lnif $dotfilepath/.bash_profile $HOME/.bash_profile
-lnif $dotfilepath/.aliases $HOME/.aliases
-lnif $dotfilepath/.exports $HOME/.exports
-lnif $dotfilepath/.functions $HOME/.functions
-lnif $dotfilepath/.zshrc $HOME/.zshrc
-lnif $dotfilepath/.screenrc $HOME/.screenrc
-lnif $dotfilepath/.gitconfig $HOME/.gitconfig
-lnif $dotfilepath/.tmux $HOME/.tmux
-lnif $dotfilepath/.tmux.conf $HOME/.tmux.conf
-lnif $dotfilepath/.osx $HOME/.osx
-lnif $dotfilepath/.git-completion.bash $HOME/.git-completion.bash
-
-echo "Install Done"
+echo "Install done"

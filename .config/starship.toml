@@ -1,0 +1,98 @@
+"$schema" = "https://starship.rs/config-schema.json"
+
+add_newline = false
+command_timeout = 1000
+scan_timeout = 30
+palette = "tokyo_night"
+
+format = """
+$directory$git_branch$git_status$git_state$fill$nodejs$python$ruby$golang$rust$php$cmd_duration
+$character"""
+
+right_format = "$time$shell"
+
+[fill]
+symbol = " "
+
+[directory]
+style = "bold blue"
+truncation_length = 3
+truncate_to_repo = false
+read_only = " ro"
+
+[git_branch]
+symbol = "git "
+style = "bold purple"
+format = "[$symbol$branch(:$remote_branch)]($style) "
+
+[git_status]
+style = "bold red"
+format = "([$all_status$ahead_behind]($style) )"
+conflicted = "="
+ahead = "up${count}"
+behind = "down${count}"
+diverged = "up${ahead_count} down${behind_count}"
+untracked = "?${count}"
+stashed = "stash${count}"
+modified = "!${count}"
+staged = "+${count}"
+renamed = "renamed${count}"
+deleted = "x${count}"
+
+[git_state]
+style = "bold yellow"
+
+[cmd_duration]
+min_time = 500
+format = "took [$duration]($style) "
+style = "bold yellow"
+
+[character]
+success_symbol = "[❯](bold green)"
+error_symbol = "[❯](bold red)"
+vimcmd_symbol = "[❮](bold blue)"
+
+[time]
+disabled = false
+format = "[$time]($style) "
+style = "dimmed white"
+time_format = "%H:%M"
+
+[shell]
+disabled = false
+zsh_indicator = "zsh"
+format = "[$indicator]($style)"
+style = "dimmed cyan"
+
+[nodejs]
+symbol = "node "
+format = "[$symbol($version )]($style)"
+
+[python]
+symbol = "py "
+format = "[$symbol($version )(($virtualenv) )]($style)"
+
+[ruby]
+symbol = "rb "
+format = "[$symbol($version )]($style)"
+
+[golang]
+symbol = "go "
+format = "[$symbol($version )]($style)"
+
+[rust]
+symbol = "rs "
+format = "[$symbol($version )]($style)"
+
+[php]
+symbol = "php "
+format = "[$symbol($version )]($style)"
+
+[palettes.tokyo_night]
+blue = "#7aa2f7"
+cyan = "#7dcfff"
+green = "#9ece6a"
+purple = "#bb9af7"
+red = "#f7768e"
+yellow = "#e0af68"
+white = "#c0caf5"

@@ -1,51 +1,58 @@
 # vim: syntax=sh
-# Alias
-alias less="/usr/bin/less -EmrSw"
+
+# 一般工具。
+alias less="/usr/bin/less -FRX"
 alias more="less"
-alias diff="colordiff"
-alias irssi="export TERM=screen-256color;irssi"
 alias cd..="cd .."
 alias cd...="cd ../.."
 alias sshp="ssh -p 222"
-alias jsl="$HOME/jslint.vim/bin/jslint"
-#alias tmux="TERM=screen-256color-bce tmux"
+alias cleandns="sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder"
+alias i5="iconv -f BIG5 -t UTF-8"
+alias path='printf "%s\n" "${PATH//:/\\n}"'
+
+# 有安裝現代工具時優先使用。
+if command -v eza >/dev/null 2>&1; then
+    alias ls="eza --group-directories-first --icons=auto"
+    alias ll="eza -la --group-directories-first --icons=auto --git"
+    alias tree="eza --tree --icons=auto"
+else
+    case "$(uname)" in
+        Darwin)
+            alias ls="ls -aFG"
+            alias ll="ls -alG"
+            ;;
+        Linux)
+            alias ls="ls -aF --color=auto"
+            alias ll="ls -al --color=auto"
+            ;;
+        FreeBSD)
+            alias ls="ls -aFGg"
+            alias ll="ls -aGg"
+            ;;
+    esac
+fi
+
+if command -v bat >/dev/null 2>&1; then
+    alias cat="bat --paging=never"
+fi
+
+if command -v rg >/dev/null 2>&1; then
+    alias grep="rg"
+fi
+
+if command -v delta >/dev/null 2>&1; then
+    alias diff="delta"
+fi
+
+# 網路。
 alias ip="dig +short myip.opendns.com @resolver1.opendns.com"
 
-
-# for different OS
-operatesystem=$(uname)
-
-case $operatesystem in
-  "Linux")
-    alias ls='ls -aF --color'
-    alias ll='ls -al --color | less -r'
-    alias fixlocale="sudo locale-gen --lang en_US.UTF-8;sudo locale-gen;"
-    alias top="htop"
-    ;;
-  "Darwin")
-    alias ls="ls -aFG"
-    alias ll='ls -alG'
-    alias youtube="sudo ipfw add reject src-ip 210.71.222.0/24 in"
-    alias cleandns="sudo killall -HUP mDNSResponder"
-    alias cleands='sudo find / -name ".DS_Store" -depth -exec rm {} \;'
-    alias i5="piconv -f big5 -t utf8 "
-#   export PATH="$(brew --prefix josegonzalez/php/php54)/bin:$PATH" # for brew php
-    export PATH="$PATH:$HOME/Library/Python/2.7/bin"
-    ;;
-  "FreeBSD")
-    alias ls="ls -aFGg"
-    alias ll="ls -aGg | less -r"
-    ;;
-esac
-
-# for laravel
+# Laravel / PHP。
 alias pa="php artisan"
-alias par="php artisan routes"
 alias pam="php artisan migrate"
-alias pam:r="php artisan migrate:refresh"
+alias pam:fresh="php artisan migrate:fresh"
 alias pam:roll="php artisan migrate:rollback"
-alias pam:rs="php artisan migrate:refresh --seed"
-alias pda="php artisan dumpautoload"
-alias cu="composer update"
+alias pam:rs="php artisan migrate:fresh --seed"
 alias ci="composer install"
+alias cu="composer update"
 alias cda="composer dump-autoload -o"

@@ -1,0 +1,11 @@
+tap "homebrew/bundle"
+
+brew "starship"
+brew "tmux"
+brew "fzf"
+brew "ripgrep"
+brew "fd"
+brew "bat"
+brew "eza"
+brew "jq"
+brew "git-delta"

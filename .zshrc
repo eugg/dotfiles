@@ -1,44 +1,45 @@
-# Path to your oh-my-zsh configuration.
-ZSH=$HOME/shell/src/myzsh
+# zsh 設定
 
-# Set name of the theme to load.
-# Look in ~/.oh-my-zsh/themes/
-# Optionally, if you set this to "random", it'll load a random theme each
-# time that oh-my-zsh is loaded.
-ZSH_THEME="far"
+export STARSHIP_CONFIG="${HOME}/.config/starship.toml"
 
-# Uncomment following line if you want to disable autosetting terminal title.
-DISABLE_AUTO_TITLE="true"
-
-# Uncomment following line if you want to disable command autocorrection
-# DISABLE_CORRECTION="true"
-
-# Uncomment following line if you want red dots to be displayed while waiting for completion
-COMPLETION_WAITING_DOTS="true"
-
-# Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
-# Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
-# Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(git bower bundler cap composer tmux)
-
-source $ZSH/oh-my-zsh.sh
-
-# Customize to your needs...
-[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"
-# Load RVM into a shell session *as a function*
-
-# Settings for plugins
-## tmux
-ZSH_TMUX_AUTOSTART=true
-ZSH_TMUX_AUTOSTART_ONCE=true
-ZSH_TMUX_AUTOCONNECT=true
-ZSH_TMUX_AUTOQUIT=false
-
-# Load the shell dotfiles. and then some:
-# * ~/.path can be used to extend `$PATH`.
-# * ~/.extra can be used for other settings you don't want to commit.
-for file in ~/.{path,exports,aliases,functions,extra}; do
-    [ -f "$file" ] && source "$file"
+# 載入共用 shell 設定。
+for file in "${HOME}"/.{path,exports,aliases,functions,extra}; do
+    [ -r "$file" ] && source "$file"
 done
 unset file
-[[ -s /etc/profile.d/rvm.sh ]] && source /etc/profile.d/rvm.sh
+
+# zsh 行為選項。
+setopt auto_cd
+setopt auto_pushd
+setopt pushd_ignore_dups
+setopt hist_ignore_dups
+setopt hist_ignore_space
+setopt share_history
+setopt inc_append_history
+setopt prompt_subst
+
+HISTFILE="${HOME}/.zsh_history"
+HISTSIZE=50000
+SAVEHIST=50000
+
+# 選用 Homebrew 補完與工具整合。
+if command -v brew >/dev/null 2>&1; then
+    FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
+fi
+
+autoload -Uz compinit
+compinit
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
+zstyle ':completion:*' menu select
+
+if command -v brew >/dev/null 2>&1 && command -v fzf >/dev/null 2>&1; then
+    source "$(brew --prefix fzf 2>/dev/null)/shell/key-bindings.zsh" 2>/dev/null || true
+    source "$(brew --prefix fzf 2>/dev/null)/shell/completion.zsh" 2>/dev/null || true
+fi
+
+# Prompt。
+if command -v starship >/dev/null 2>&1; then
+    eval "$(starship init zsh)"
+else
+    PROMPT='%F{cyan}%~%f %# '
+fi
