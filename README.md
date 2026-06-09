@@ -9,6 +9,7 @@
 - 建立 zsh 開發環境入口：載入 PATH、alias、function、補完、zoxide 與 Starship prompt。
 - 管理常用命令別名：例如 `ll`、`tree`、`grep`、Laravel / Composer 快捷命令。
 - 提供常用 shell function：例如建立並進入目錄、啟動本機 HTTP server、格式化 JSON、查憑證名稱、計算檔案 gzip 後大小。
+- 安裝時互動詢問 Git name/email，並由 template 產生 `~/.gitconfig`。
 - 套用低風險 macOS defaults：Finder、Dock、Safari、TextEdit、截圖位置等偏好。
 - 用 `Brewfile` 記錄建議安裝的現代 CLI 工具。
 - 用 `install.sh` 建立家目錄 symlink，並在覆蓋既有檔案前自動備份。
@@ -35,7 +36,7 @@
 | `.functions` | 常用 shell function |
 | `.config/starship.toml` | Starship prompt 設定 |
 | `.osx` | 低風險 macOS defaults |
-| `.gitconfig` | Git 使用者資訊、alias、color 與 LFS 設定 |
+| `.gitconfig.template` | Git alias、color、LFS filter 與互動產生使用者資訊的 template |
 | `Brewfile` | 建議安裝的 Homebrew 套件 |
 | `install.sh` | 建立 symlink 的安裝腳本 |
 
@@ -73,6 +74,15 @@ brew bundle
 ```sh
 ./install.sh
 ```
+
+安裝時會詢問 Git 使用者資訊：
+
+```text
+Git user.name [Eugene]:
+Git user.email [name@example.com]:
+```
+
+直接按 Enter 會沿用目前 `git config --global` 裡的值。
 
 安裝腳本會把既有的一般檔案備份到：
 

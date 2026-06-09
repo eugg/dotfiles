@@ -1,6 +1,6 @@
 [user]
-	email = eugg1201@gmail.com
-	name = Eugene Wang
+	email = {{GIT_EMAIL}}
+	name = {{GIT_NAME}}
 
 [color]
     editor = vim
@@ -34,3 +34,9 @@
 
 [pager]
     diff =
+
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
