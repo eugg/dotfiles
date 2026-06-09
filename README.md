@@ -1,15 +1,14 @@
 # dotfiles
 
-這個 repository 是我的 macOS 開發環境設定集合。它的用途是把常用 shell 設定、alias、function、tmux 設定、Git 設定與低風險 macOS 偏好集中管理，讓新機器或重裝環境時可以快速恢復熟悉的工作方式。
+這個 repository 是我的 macOS 開發環境設定集合。它的用途是把常用 shell 設定、alias、function、Git 設定與低風險 macOS 偏好集中管理，讓新機器或重裝環境時可以快速恢復熟悉的工作方式。
 
 目前這份設定已改成 zsh-first：主要 shell 是 zsh，prompt 使用 Starship，不再依賴舊的 bash prompt、oh-my-zsh theme 或 powerline 設定。
 
 ## 這份 dotfiles 會做什麼
 
-- 建立 zsh 開發環境入口：載入 PATH、alias、function、補完與 Starship prompt。
+- 建立 zsh 開發環境入口：載入 PATH、alias、function、補完、zoxide 與 Starship prompt。
 - 管理常用命令別名：例如 `ll`、`tree`、`grep`、Laravel / Composer 快捷命令。
 - 提供常用 shell function：例如建立並進入目錄、啟動本機 HTTP server、格式化 JSON、查憑證名稱、計算檔案 gzip 後大小。
-- 設定 tmux：使用 tmux 3.x 語法、滑鼠支援、vi copy mode、狀態列與常用 pane 快捷鍵。
 - 套用低風險 macOS defaults：Finder、Dock、Safari、TextEdit、截圖位置等偏好。
 - 用 `Brewfile` 記錄建議安裝的現代 CLI 工具。
 - 用 `install.sh` 建立家目錄 symlink，並在覆蓋既有檔案前自動備份。
@@ -30,13 +29,11 @@
 
 | 檔案 | 用途 |
 | --- | --- |
-| `.zshrc` | zsh 主要入口，載入共用設定、補完、fzf 與 Starship |
+| `.zshrc` | zsh 主要入口，載入共用設定、補完、fzf、zoxide 與 Starship |
 | `.exports` | PATH、locale、pager、editor、history 等環境變數 |
-| `.aliases` | 常用命令 alias，優先使用 `eza`、`bat`、`rg`、`delta` 等現代工具 |
+| `.aliases` | 常用命令 alias，優先使用 `eza`、`bat`、`rg`、`delta`、`lazygit` 等現代工具 |
 | `.functions` | 常用 shell function |
 | `.config/starship.toml` | Starship prompt 設定 |
-| `.tmux.conf` | tmux 主要設定 |
-| `.tmux/` | tmux 共用設定與快捷鍵 |
 | `.osx` | 低風險 macOS defaults |
 | `.gitconfig` | Git 使用者資訊、alias、color 與 LFS 設定 |
 | `Brewfile` | 建議安裝的 Homebrew 套件 |
@@ -47,7 +44,7 @@
 `Brewfile` 目前包含：
 
 - `starship`：跨 shell prompt。
-- `tmux`：terminal multiplexer。
+- `zoxide`：更聰明的 `cd`，會記住常用目錄並用 `z` 快速跳轉。
 - `fzf`：模糊搜尋。
 - `ripgrep`：快速搜尋文字。
 - `fd`：快速搜尋檔案。
@@ -55,6 +52,7 @@
 - `eza`：現代版 `ls`。
 - `jq`：JSON 處理。
 - `git-delta`：更好讀的 Git diff pager。
+- `lazygit`：terminal 裡的 Git 操作介面，可用 `lg` 啟動。
 
 ## 安裝
 

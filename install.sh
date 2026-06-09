@@ -64,8 +64,6 @@ link_file "$dotfiles_dir/.aliases" "$HOME/.aliases"
 link_file "$dotfiles_dir/.exports" "$HOME/.exports"
 link_file "$dotfiles_dir/.functions" "$HOME/.functions"
 link_file "$dotfiles_dir/.gitconfig" "$HOME/.gitconfig"
-link_file "$dotfiles_dir/.tmux" "$HOME/.tmux"
-link_file "$dotfiles_dir/.tmux.conf" "$HOME/.tmux.conf"
 link_file "$dotfiles_dir/.osx" "$HOME/.osx"
 link_file "$dotfiles_dir/.config/starship.toml" "$HOME/.config/starship.toml"
 
