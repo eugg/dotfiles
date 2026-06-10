@@ -57,13 +57,7 @@
 
 ## 安裝
 
-先安裝 Homebrew 套件：
-
-```sh
-brew bundle
-```
-
-先預覽會建立哪些 symlink：
+先預覽會執行哪些安裝與 symlink：
 
 ```sh
 ./install.sh --dry-run
@@ -73,6 +67,12 @@ brew bundle
 
 ```sh
 ./install.sh
+```
+
+安裝腳本預設會先執行 `brew bundle --file Brewfile`，安裝 Starship、fzf、zoxide 等 CLI 工具，接著才建立家目錄 symlink。若只想更新 dotfile symlink、不想動 Homebrew 套件，可以用：
+
+```sh
+./install.sh --skip-brew
 ```
 
 安裝時會詢問 Git 使用者資訊：

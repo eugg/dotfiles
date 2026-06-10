@@ -1,5 +1,3 @@
-tap "homebrew/bundle"
-
 brew "starship"
 brew "zoxide"
 brew "fzf"

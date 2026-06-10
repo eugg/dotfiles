@@ -5,12 +5,14 @@ set -euo pipefail
 dotfiles_dir="$(cd "$(dirname "$0")" && pwd -P)"
 backup_dir="${HOME}/.dotfiles-backup/$(date +%Y%m%d-%H%M%S)"
 dry_run=false
+skip_brew=false
 
 usage() {
     cat <<EOF
-Usage: ./install.sh [--dry-run]
+Usage: ./install.sh [--dry-run] [--skip-brew]
 
 安裝 zsh-first dotfiles，將設定檔 symlink 到家目錄。
+預設會先執行 brew bundle 安裝 Brewfile 裡的 CLI 工具。
 Git 設定會互動詢問 name/email 後產生。
 既有的一般檔案會移到 ${backup_dir}。
 EOF
@@ -51,6 +53,25 @@ backup_file() {
 
 escape_sed_replacement() {
     printf '%s' "$1" | sed 's/[\/&]/\\&/g'
+}
+
+install_brew_bundle() {
+    if [ "$skip_brew" = true ]; then
+        printf 'Skipping brew bundle\n'
+        return
+    fi
+
+    if [ "$dry_run" = true ]; then
+        printf '[dry-run] brew bundle --file %s\n' "$dotfiles_dir/Brewfile"
+        return
+    fi
+
+    if ! command -v brew >/dev/null 2>&1; then
+        printf 'Homebrew is not installed; skipping brew bundle\n' >&2
+        return
+    fi
+
+    brew bundle --file "$dotfiles_dir/Brewfile"
 }
 
 render_gitconfig() {
@@ -102,6 +123,9 @@ while [ $# -gt 0 ]; do
         --dry-run)
             dry_run=true
             ;;
+        --skip-brew)
+            skip_brew=true
+            ;;
         -h|--help)
             usage
             exit 0
@@ -117,6 +141,7 @@ done
 
 echo "Installing zsh dotfiles"
 
+install_brew_bundle
 link_file "$dotfiles_dir/.zshrc" "$HOME/.zshrc"
 link_file "$dotfiles_dir/.aliases" "$HOME/.aliases"
 link_file "$dotfiles_dir/.exports" "$HOME/.exports"
@@ -126,3 +151,4 @@ link_file "$dotfiles_dir/.osx" "$HOME/.osx"
 link_file "$dotfiles_dir/.config/starship.toml" "$HOME/.config/starship.toml"
 
 echo "Install done"
+echo "Open a new shell or run: exec zsh"
