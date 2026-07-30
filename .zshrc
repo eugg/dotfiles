@@ -48,7 +48,3 @@ if command -v starship >/dev/null 2>&1; then
 else
     PROMPT='%F{cyan}%~%f > '
 fi
-
-
-# Herd injected PHP 8.4 configuration.
-export HERD_PHP_84_INI_SCAN_DIR="/Users/euwang/Library/Application Support/Herd/config/php/84/"

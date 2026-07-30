@@ -13,6 +13,7 @@
 - 套用低風險 macOS defaults：Finder、Dock、Safari、TextEdit、截圖位置等偏好。
 - 用 `Brewfile` 記錄建議安裝的現代 CLI 工具。
 - 用 `install.sh` 建立家目錄 symlink，並在覆蓋既有檔案前自動備份。
+- 提供 `.extra.example` 作為個人或機器專屬設定範本，不直接提交真實的 `~/.extra`。
 
 ## 不會做什麼
 
@@ -25,6 +26,7 @@
 - 不會重建 Spotlight index。
 - 不會刪除或重建 Launchpad database。
 - 不會自動安裝 oh-my-zsh。
+- 不會自動 symlink 或提交個人專屬的 `~/.extra`。
 
 ## 檔案說明
 
@@ -34,6 +36,7 @@
 | `.exports` | PATH、locale、pager、editor、history 等環境變數 |
 | `.aliases` | 常用命令 alias，優先使用 `eza`、`bat`、`rg`、`delta`、`lazygit` 等現代工具 |
 | `.functions` | 常用 shell function |
+| `.extra.example` | 個人或機器專屬設定範本，可自行複製成 `~/.extra` |
 | `.config/starship.toml` | Starship prompt 設定 |
 | `.osx` | 低風險 macOS defaults |
 | `.gitconfig.template` | Git alias、color、LFS filter 與互動產生使用者資訊的 template |
@@ -75,20 +78,36 @@
 ./install.sh --skip-brew
 ```
 
+若只想安裝 shell dotfiles、不想產生或覆蓋 `~/.gitconfig`，可以用：
+
+```sh
+./install.sh --skip-gitconfig
+```
+
 安裝時會詢問 Git 使用者資訊：
 
 ```text
-Git user.name [Eugene]:
+Git user.name [Existing Name]:
 Git user.email [name@example.com]:
 ```
 
 直接按 Enter 會沿用目前 `git config --global` 裡的值。
 
-安裝腳本會把既有的一般檔案備份到：
+安裝腳本會把既有檔案，或已指向其他來源的 symlink，備份到：
 
 ```text
 ~/.dotfiles-backup/YYYYMMDD-HHMMSS/
 ```
+
+## 個人設定
+
+這個 repo 的共用檔案避免寫死個人路徑、token 或機器專屬設定。如果需要 Laravel Herd、公司內部 PATH、私有 token 或其他只屬於某台機器的設定，請複製範本：
+
+```sh
+cp .extra.example ~/.extra
+```
+
+`.zshrc` 會自動載入 `~/.extra`，但 `install.sh` 不會 symlink 或建立它。這樣同一份 dotfiles 可以分享給別人，而個人設定仍留在自己的電腦。
 
 ## 套用 macOS defaults
 

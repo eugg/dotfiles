@@ -6,21 +6,23 @@ dotfiles_dir="$(cd "$(dirname "$0")" && pwd -P)"
 backup_dir="${HOME}/.dotfiles-backup/$(date +%Y%m%d-%H%M%S)"
 dry_run=false
 skip_brew=false
+skip_gitconfig=false
 
 usage() {
     cat <<EOF
-Usage: ./install.sh [--dry-run] [--skip-brew]
+Usage: ./install.sh [--dry-run] [--skip-brew] [--skip-gitconfig]
 
 安裝 zsh-first dotfiles，將設定檔 symlink 到家目錄。
 預設會先執行 brew bundle 安裝 Brewfile 裡的 CLI 工具。
 Git 設定會互動詢問 name/email 後產生。
-既有的一般檔案會移到 ${backup_dir}。
+既有檔案或不同來源的 symlink 會移到 ${backup_dir}。
 EOF
 }
 
 link_file() {
     local source="$1"
     local target="$2"
+    local existing_source
 
     if [ "$dry_run" = true ]; then
         printf '[dry-run] link %s -> %s\n' "$target" "$source"
@@ -30,11 +32,13 @@ link_file() {
     mkdir -p "$(dirname "$target")"
 
     if [ -L "$target" ]; then
-        ln -sfn "$source" "$target"
-        return
+        existing_source="$(readlink "$target")"
+        if [ "$existing_source" = "$source" ]; then
+            return
+        fi
     fi
 
-    if [ -e "$target" ]; then
+    if [ -L "$target" ] || [ -e "$target" ]; then
         mkdir -p "$backup_dir"
         mv "$target" "$backup_dir/"
     fi
@@ -75,6 +79,11 @@ install_brew_bundle() {
 }
 
 render_gitconfig() {
+    if [ "$skip_gitconfig" = true ]; then
+        printf 'Skipping gitconfig render\n'
+        return
+    fi
+
     local target="${HOME}/.gitconfig"
     local default_name
     local default_email
@@ -125,6 +134,9 @@ while [ $# -gt 0 ]; do
             ;;
         --skip-brew)
             skip_brew=true
+            ;;
+        --skip-gitconfig)
+            skip_gitconfig=true
             ;;
         -h|--help)
             usage

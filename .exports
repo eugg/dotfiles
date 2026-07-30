@@ -8,9 +8,6 @@ elif [ -d /usr/local/bin ]; then
 fi
 
 # 使用者路徑。
-if [ -d "${HOME}/Library/Application Support/Herd/bin" ]; then
-    export PATH="${HOME}/Library/Application Support/Herd/bin:${PATH}"
-fi
 export PATH="${HOME}/bin:${HOME}/.local/bin:${HOME}/.composer/vendor/bin:${PATH}"
 
 # 預設工具。

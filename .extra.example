@@ -1,0 +1,17 @@
+# vim: syntax=sh
+
+# Optional machine-specific settings.
+# Copy this file to ~/.extra and edit it locally. install.sh does not symlink it.
+
+# Laravel Herd.
+if [ -d "${HOME}/Library/Application Support/Herd/bin" ]; then
+    export PATH="${HOME}/Library/Application Support/Herd/bin:${PATH}"
+fi
+
+for php_version in 84 85; do
+    herd_php_config="${HOME}/Library/Application Support/Herd/config/php/${php_version}"
+    if [ -d "$herd_php_config" ]; then
+        export "HERD_PHP_${php_version}_INI_SCAN_DIR=$herd_php_config/"
+    fi
+done
+unset php_version herd_php_config
